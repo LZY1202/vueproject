@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <p id="x1">aaaaa</p>
+</body>
+<script>
+    const data = {
+        name:"lzy",
+        age:18,
+    }
+    Object.keys(data).forEach(key=>{
+        let value = data[key];
+        Object.defineProperty(data,key,{
+            set(newValue){
+                value = newValue;
+                dep.nodify();
+            },
+            get(){
+                return value;
+            }
+        })
+    })
+
+    class Dep{
+        constructor(){
+            this.subs = []
+        }
+        addSubs(watcher){
+            this.subs.push(watcher)
+        }
+        nodify(){
+            this.subs.forEach( item=>{
+                item.update()
+            })
+        }
+    }
+    class Watcher{
+        constructor(nodename){
+            this.nodename = nodename
+        }
+        update(){
+            console.log(this.nodename,"更新");
+        }
+    }
+    const dep = new Dep()
+    const w1 = new Watcher("div")
+    dep.addSubs(w1)
+    const w2 = new Watcher("div2")
+    dep.addSubs(w2)
+
+    // var re=null,i;
+    // for(i=0; i<10; i++){
+    //     re = /cat/g;
+    //     console.log(re.test("catastrophe"));
+    // }
+
+    // var a;
+    // function b(){
+    //     console.log(a);
+    // }
+    // // var a = 5;
+    // b();
+    // var s1 = "some text";
+    // var s2 = s1.substring(2);
+    // console.log(s2);
+    // console.log(s1);
+    // var s = String("aaa");
+    // console.log(typeof s);
+    // var b = new Boolean(false);
+    // console.log(b.valueOf());
+    // if(b){
+    //     console.log("true");
+    // }else{
+    //     console.log("false");
+    // }
+    var num = 100;
+    console.log(num.toPrecision(2));
+    var c = document.getElementById("x1").val;
+    console.log(c);
+    (function(){
+        var a=b=3;
+    })();
+    console.log(b);
+    var x;
+    var y=1;
+    var z =x + y;
+    console.log(z);
+    var s = "aaaa";
+    // console.log(s.parseJson());
+    console.log(0.1+0.2);
+    var d = document.getElementsByTagName("*").length;
+    console.log(d);
+
+    function test(){
+        var x = 'abc';
+        var re = [];
+        re.push(x);
+        try{
+            throw ''
+        }catch(x){
+            console.log("adsf");
+            x = "error"
+        }
+        re.push(x);
+        return re
+    }
+    console.log(test());
+
+</script>
+</html>

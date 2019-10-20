@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    //1. 监听vue实例中的data对象
+    const data = {
+        name: "lzy"
+    }
+    //2. 遍历data中的属性
+    Object.keys(data).forEach(key => {
+        let value = data[key]
+        //3. 通过defineProperty来监听data中属性的改变
+        Object.defineProperty(data, key, {
+            set(newValue) {
+                value = newValue;
+                dep.nodify();
+            },
+            get() {
+                return value
+            }
+        })
+    })
+
+    //发布者
+    class Dep{
+        constructor(){
+            this.subs = [];
+        }
+        addSub(watcher){
+            this.subs.push(watcher)
+        }
+        nodify(){
+            this.subs.forEach( item=>{
+                item.update()
+            })
+        }
+    }
+    //订阅者（我们的dom）
+    class Watcher{
+        constructor(name){
+            this.name = name;
+        }
+        update(){
+            console.log(this.name+" update");
+        }
+    }
+    const dep = new Dep();
+    const w1 = new Watcher("div1");
+    dep.addSub(w1)
+    const w2 = new Watcher("div2");
+    dep.addSub(w2)
+    const w3 = new Watcher("div3");
+    dep.addSub(w3)
+    // console.log(5-null);
+    // console.log(null === undefined);
+    // console.log(undefined == 0);
+    // console.log(null == 0);
+
+    const obj = {
+        name:'lzy',
+        age:12,
+        toString(){
+            return "toString"
+        }
+    }
+    // with(obj){
+    //     console.log(this);
+    //     var Name = name;
+    //     var toString = function(){
+    //         return "toStringwith"
+    //     }
+    //     var toS = toString();
+    // }
+    // console.log(Name);
+    // console.log(toS);
+
+    function a(b){
+        b.name="zzz"
+    }
+    // console.log(a(1,2));
+    a(obj)
+    // console.log(2+true);
+    console.log(obj.name);
+</script>
+
+</html>
